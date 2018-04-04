@@ -1,2 +1,2 @@
 # Siren
-Music streaming web app
+Music player project
