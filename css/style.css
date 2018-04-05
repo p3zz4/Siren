@@ -4,6 +4,7 @@ body {
         height: 100%;
         margin: 0px;
         overflow: hidden;
+        font-family: "Roboto";
 }
 
 .playPauseBtn {
@@ -15,7 +16,7 @@ body {
         color: rgb(255, 255, 255);
 }
 
-.playPauseBtn span{
+.playPauseBtn span {
         padding: 10%;
 }
 
@@ -33,19 +34,21 @@ body {
 .bottomPanel:hover {
         display: inline;
         bottom: 0px;
-        background-color: rgba(225, 225, 225, 0.8);
-        color: rgb(25, 25, 25);
+        background-color: rgba(225, 225, 225, 0.7);
+        color: rgb(0, 0, 0);
         background-size: 100% 70%;
 }
-.bottomPanel:hover .controls {
-        margin-top: 3%;
 
+.bottomPanel:hover .controls {
+        margin-top: 4%;
 }
-.controls{
+
+.controls {
         transition: margin 0.5s;
         text-align: center;
 }
-.controls span{
+
+.controls span {
         width: 100%;
         margin-left: 2%;
         margin-right: 2%;
@@ -61,13 +64,49 @@ body {
         background-color: transparent;
 }
 
-.rightPanel:hover {
-        right: 0%;
-        background-color: rgba(225, 225, 225, 0.8);
-        
+.rightPanel .playlist {
+        display: none;
 }
 
-.rightPanel input{
+.rightPanel:hover {
+        right: 0%;
+        background-color: rgba(225, 225, 225, 0.7);
+}
+
+.rightPanel:hover .playlist {
+        display: inherit;
+}
+
+.rightPanel input {
+        display: none;
+}
+
+.rightPanel label {
+        width: 100%;
+        font-weight: bolder;
+        color: white;
+        background-color: black;
+        display: block;
+        cursor: pointer;
+        font-size: 5vh;
+        padding-left: 4%;
+}
+
+.rightPanel label:hover {
+        background-color: rgb(255, 71, 71);
+}
+
+.rightPanel .track {
+        border: 1px solid teal;
+        margin: 15px;
+        padding: 5px;
+}
+
+.track div {
+        margin: 5px;
+}
+
+.track .deleteBtn {
         float: right;
 }
 
@@ -87,10 +126,9 @@ body {
         animation-iteration-count: infinite;
 }
 
-.audio{
+.audio {
         width: 100%;
         position: absolute;
-        bottom: 0;
+        bottom: 0%;
         display: block;
 }
-
