@@ -86,14 +86,13 @@ export class Siren {
                 label.htmlFor = "file";
                 label.innerHTML = "+";
 
-                loader.addEventListener("change", _ => {
+                loader.addEventListener("change", (event) => {
                         [...loader.files].map((file) => file.name.slice(0, -4)).forEach(name => {
-                                //this.addSourceToQueue(`../data/music/${name}.mp3`);
                                 this.addToRemotePlaylist(name);
                         });
-                        // setTimeout(_=>{
-                        //         this.updateLocalPlaylist();
-                        // },200);
+                        setTimeout(_ => {
+                                this.updateLocalPlaylist();
+                        }, 500);
                 });
 
                 return rightPanel;
@@ -135,33 +134,17 @@ export class Siren {
                 });
                 return audio;
         }
-        addSourceToQueue(newSource) {
+        addSourceToQueue(newSource, index) {
                 const source = document.createElement("source");
                 source.type = "audio/mpeg";
                 source.src = newSource;
-                this.sourceElements.push(source);
+                this.sourceElements[index] = source;
         }
-        playNextTrack() {
-                if (this.sourceElements.length === 0) {
-                        return;
-                }
+        playTrackAtIndex(index) {
+                console.log(this.sourceElements, index);
                 this.audio.pause();
-                const tmp = this.sourceElements.shift();
-                this.sourceElements.push(tmp);
                 this.audio.innerHTML = "";
-                this.audio.appendChild(this.sourceElements[0]);
-                this.audio.load();
-                this.audio.play();
-        }
-        playPreviousTrack() {
-                if (this.sourceElements.length === 0) {
-                        return;
-                }
-                this.audio.pause();
-                const tmp = this.sourceElements.pop();
-                this.sourceElements.unshift(tmp);
-                this.audio.innerHTML = "";
-                this.audio.appendChild(this.sourceElements[0]);
+                this.audio.appendChild(this.sourceElements[index]);
                 this.audio.load();
                 this.audio.play();
         }
@@ -169,10 +152,23 @@ export class Siren {
                 if (this.sourceElements.length === 0) {
                         return;
                 }
-                this.audio.pause();
-                this.audio.appendChild(this.sourceElements[0]);
-                this.audio.load();
-                this.audio.play();
+                this.playTrackAtIndex(0);
+        }
+        playNextTrack() {
+                if (this.sourceElements.length === 0) {
+                        return;
+                }
+                this.playTrackAtIndex((this.sourceElements.indexOf(this.audio.firstChild) + 1) % this.sourceElements.length);
+        }
+        playPreviousTrack() {
+                if (this.sourceElements.length === 0) {
+                        return;
+                }
+                if (this.sourceElements.length === 0) {
+                        return;
+                }
+                this.playTrackAtIndex((this.sourceElements.indexOf(this.audio.firstChild) + this.sourceElements.length - 1) % this.sourceElements.length);
+                
         }
         initAnalyser() {
                 const context = new AudioContext();
@@ -183,7 +179,7 @@ export class Siren {
                 return analyser;
         }
         updateVisualizer() {
-                requestAnimationFrame(_ => this.updateVisualizer());
+                this.requestID = requestAnimationFrame(_ => this.updateVisualizer());
                 const fbcArray = new Uint8Array(this.analyser.frequencyBinCount);
                 this.analyser.getByteFrequencyData(fbcArray);
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -194,8 +190,7 @@ export class Siren {
                 const NumberOfBars = (this.canvas.width / barStep >= 1024) ? this.canvas.width / barStep : 1023;
                 for (let i = 0; i < NumberOfBars; i++) {
                         const barX = i * barStep;
-                        const barHeight = -(fbcArray[i]) * 1.5;
-
+                        const barHeight = -(fbcArray[i]) * 0.004 * window.innerHeight * 0.8; // 0.004 ~ 1/255; array takes value from 0 to 255
                         this.ctx.fillRect(barX, this.canvas.height, barWidth, barHeight);
                 }
         }
@@ -203,7 +198,10 @@ export class Siren {
                 this.requestID = requestAnimationFrame(_ => this.updateVisualizer());
         }
         stopVisualizer() {
-                cancelAnimationFrame(this.requestID);
+                setTimeout(_ => {
+                        cancelAnimationFrame(this.requestID);
+                }, 2000);
+
         }
         addToRemotePlaylist(name) {
                 fetch("http://localhost:3000/playlist", {
@@ -227,7 +225,7 @@ export class Siren {
                 this.sourceElements = [];
                 this.playlist.innerHTML = "";
                 fetch("http://localhost:3000/playlist")
-                        .then(response => response.json().then((response) => response.reverse().forEach(element => {
+                        .then(response => response.json().then((response) => response.reverse().forEach((element, index) => {
 
                                 const track = document.createElement("div");
                                 this.playlist.appendChild(track);
@@ -237,7 +235,7 @@ export class Siren {
                                 track.appendChild(deleteBtn);
                                 deleteBtn.classList.add("deleteBtn");
                                 deleteBtn.innerHTML = "X";
-                                deleteBtn.addEventListener("click", () => {
+                                deleteBtn.addEventListener("click", (event) => {
                                         fetch(`http://localhost:3000/playlist/${element.id}`, {
                                                 headers: {
                                                         'Accept': 'application/json',
@@ -247,16 +245,22 @@ export class Siren {
                                         }).catch((err) => {
                                                 console.log(err)
                                         });
+                                        event.stopPropagation();
                                         deleteBtn.parentNode.parentNode.removeChild(deleteBtn.parentNode);
+                                        this.sourceElements.splice(index, 1);
                                 });
                                 const name = document.createElement("div");
                                 track.appendChild(name);
                                 name.innerHTML = `Name: ${element.id}`;
 
-                                this.addSourceToQueue(`../data/music/${element.id}.mp3`);
+                                track.addEventListener("click", _ => {
+                                        this.playTrackAtIndex(index);
+                                });
+
+                                this.addSourceToQueue(`../data/music/${element.id}.mp3`, index);
 
                         })));
-                console.log(this.sourceElements);
+                console.log("Tracks in the playlist:", this.sourceElements);
         }
 
         log() {
