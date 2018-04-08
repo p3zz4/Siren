@@ -12,6 +12,11 @@ export class Siren {
                 this.requestID = null;
 
                 this.updateLocalPlaylist();
+                window.addEventListener("keypress",event =>{
+                        if(event.which == 32){
+                                this.playPauseBtn.click();
+                        }
+                });
         }
         initPlayPauseBtn() {
                 const playPauseBtn = document.createElement("div");
@@ -88,7 +93,7 @@ export class Siren {
 
                 loader.addEventListener("change", (event) => {
                         [...loader.files].map((file) => file.name.slice(0, -4)).forEach(name => {
-                                this.addToRemotePlaylist(name);
+                                this.addToRemotePlaylist(name,`../data/music/${name}.mp3`);
                         });
                         setTimeout(_ => {
                                 this.updateLocalPlaylist();
@@ -168,7 +173,7 @@ export class Siren {
                         return;
                 }
                 this.playTrackAtIndex((this.sourceElements.indexOf(this.audio.firstChild) + this.sourceElements.length - 1) % this.sourceElements.length);
-                
+
         }
         initAnalyser() {
                 const context = new AudioContext();
@@ -203,7 +208,7 @@ export class Siren {
                 }, 2000);
 
         }
-        addToRemotePlaylist(name) {
+        addToRemotePlaylist(name,path) {
                 fetch("http://localhost:3000/playlist", {
                                 headers: {
                                         'Accept': 'application/json',
@@ -211,14 +216,16 @@ export class Siren {
                                 },
                                 method: "POST",
                                 body: JSON.stringify({
-                                        "id": `${name}`
+                                        name: `${name}`,
+                                        path:`${path}`
+                                        
                                 })
                         })
                         .then((resolve) => {
-                                console.log(`Saved: ${name}`);
+                                console.log(`Saved: ${name}, ${path}`);
                         })
                         .catch((err) => {
-                                console.log(`Duplikat: ${name}`)
+                                console.log(`Duplikat: ${name}, ${path}`);
                         });
         }
         updateLocalPlaylist() {
@@ -251,13 +258,13 @@ export class Siren {
                                 });
                                 const name = document.createElement("div");
                                 track.appendChild(name);
-                                name.innerHTML = `Name: ${element.id}`;
+                                name.innerHTML = `Name: ${element.name}`;
 
                                 track.addEventListener("click", _ => {
                                         this.playTrackAtIndex(index);
                                 });
 
-                                this.addSourceToQueue(`../data/music/${element.id}.mp3`, index);
+                                this.addSourceToQueue(`${element.path}`, index);
 
                         })));
                 console.log("Tracks in the playlist:", this.sourceElements);
