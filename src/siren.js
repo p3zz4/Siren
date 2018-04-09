@@ -4,7 +4,7 @@ export class Siren {
                 this.ctx = this.canvas.getContext("2d");
                 this.playPauseBtn = this.initPlayPauseBtn();
                 this.rightPanel = this.initRightPanel();
-                this.playlist = this.initPlaylist(this.rightPanel);
+                this.playlist = this.initPlaylist();
                 this.bottomPanel = this.initBottomPanel();
                 this.audio = this.initAudio();
                 this.sourceElements = [];
@@ -13,55 +13,40 @@ export class Siren {
                 this.updateLocalPlaylist();
                 this.initKeyboardShortcuts();
         }
+        domElementCreator(elementName, parentElement, className) {
+                const tmpElement = document.createElement(elementName);
+                parentElement.appendChild(tmpElement);
+                tmpElement.classList.add(className);
+                return tmpElement;
+        }
 
         initPlayPauseBtn() {
-                const playPauseBtn = document.createElement("div");
-                document.body.appendChild(playPauseBtn);
-                playPauseBtn.classList.add("playPauseBtn");
-
-                const span = document.createElement("span");
-                playPauseBtn.appendChild(span);
+                const playPauseBtn = this.domElementCreator("div", document.body, "playPauseBtn");
+                const span = this.domElementCreator("span", playPauseBtn, "span");
                 span.innerHTML = `<i class="fas fa-play"></i>`;
                 span.addEventListener("click", () => {
                         if (this.audio.childElementCount === 0) {
                                 this.playFirstTrack();
                         } else {
-                                if (this.audio.paused) {
-                                        this.audio.play();
-                                } else {
-                                        this.audio.pause();
-                                }
+                                this.audio.paused === true ? this.audio.play() : this.audio.pause();
                         }
                 });
                 return span;
         }
         togglePlayPauseBtn() {
-                if (this.audio.paused) {
-                        this.playPauseBtn.innerHTML = `<i class="fas fa-play"></i>`;
-                } else {
-                        this.playPauseBtn.innerHTML = `<i class="fas fa-pause"></i>`;
-                }
+                this.playPauseBtn.innerHTML = this.audio.paused === true ? `<i class="fas fa-play"></i>` : `<i class="fas fa-pause"></i>`;
         }
         initBottomPanel() {
-                const bottomPanel = document.createElement("div");
-                document.body.appendChild(bottomPanel);
-                bottomPanel.classList.add("bottomPanel");
+                const bottomPanel = this.domElementCreator("div", document.body, "bottomPanel");
+                const controls = this.domElementCreator("div", bottomPanel, "controls");
+                const playPreviousTrackBtn = this.domElementCreator("span", controls, "playNextTrackBtn");
 
-                const controls = document.createElement("div");
-                bottomPanel.appendChild(controls);
-                controls.classList.add("controls");
-
-                const playPreviousTrackBtn = document.createElement("span");
-                controls.appendChild(playPreviousTrackBtn);
-                playPreviousTrackBtn.classList.add("playNextTrackBtn");
                 playPreviousTrackBtn.innerHTML = `<i class="fas fa-fast-backward"></i>`;
                 playPreviousTrackBtn.addEventListener("click", () => {
                         this.playPreviousTrack();
                 });
 
-                const playNextTrackBtn = document.createElement("span");
-                controls.appendChild(playNextTrackBtn);
-                playNextTrackBtn.classList.add("playPreviousTrackBtn");
+                const playNextTrackBtn = this.domElementCreator("span", controls, "playNextTrackBtn");
                 playNextTrackBtn.innerHTML = `<i class="fas fa-fast-forward"></i>`;
                 playNextTrackBtn.addEventListener("click", () => {
                         this.playNextTrack();
@@ -70,25 +55,19 @@ export class Siren {
                 return bottomPanel;
         }
         initRightPanel() {
-                const rightPanel = document.createElement("div");
-                document.body.appendChild(rightPanel);
-                rightPanel.classList.add("rightPanel");
-
-                const loader = document.createElement("input");
-                rightPanel.appendChild(loader);
+                const rightPanel = this.domElementCreator("div", document.body, "rightPanel");
+                const loader = this.domElementCreator("input", rightPanel, "loader");
                 loader.type = "file";
                 loader.id = "file";
                 loader.accept = ".mp3"
                 loader.multiple = true;
 
-                const label = document.createElement("label");
-                rightPanel.appendChild(label);
-                label.classList.add("label");
+                const label = this.domElementCreator("label", rightPanel, "label");
                 label.htmlFor = "file";
-                label.innerHTML = "+";
+                label.innerHTML = `<i class="fas fa-plus"></i>`;
 
                 loader.addEventListener("change", (event) => {
-                        [...loader.files].map((file) => file.name.slice(0, -4)).reduce((promises, name) =>
+                        [...loader.files].map((file) => file.name.slice(0, -4)).sort((name1,name2)=>name1<name2).reduce((promises, name) =>
                                 promises.then(_ => this.addToRemotePlaylist(name, `../data/music/${name}.mp3`)), Promise.resolve([])
                         ).then(_ => {
                                 this.updateLocalPlaylist();
@@ -97,16 +76,12 @@ export class Siren {
 
                 return rightPanel;
         }
-        initPlaylist(parent) {
-                const playlist = document.createElement("div");
-                parent.appendChild(playlist);
-                playlist.classList.add("playlist");
+        initPlaylist() {
+                const playlist = this.domElementCreator("div", this.rightPanel, "playlist");
                 return playlist;
         }
         initCanvas() {
-                const canvas = document.createElement("canvas");
-                document.body.appendChild(canvas);
-                canvas.classList.add("canvas");
+                const canvas = this.domElementCreator("canvas", document.body, "canvas");
                 canvas.width = window.innerWidth;
                 canvas.height = window.innerHeight;
                 window.addEventListener("resize", () => {
@@ -116,9 +91,7 @@ export class Siren {
                 return canvas;
         }
         initAudio() {
-                const audio = document.createElement("audio");
-                this.bottomPanel.appendChild(audio);
-                audio.classList.add("audio");
+                const audio = this.domElementCreator("audio", this.bottomPanel, "audio");
                 audio.controls = "contols";
                 audio.preload = "auto";
                 audio.addEventListener("play", _ => {
@@ -167,13 +140,15 @@ export class Siren {
                         return;
                 }
                 this.playTrackAtIndex((this.sourceElements.indexOf(this.audio.firstChild) + this.sourceElements.length - 1) % this.sourceElements.length);
-
         }
         forwardFiveSec(audio) {
                 audio.currentTime += 5;
         }
         backwardFiveSec(audio) {
                 audio.currentTime -= 5;
+        }
+        muteAudio(audio) {
+                audio.muted = audio.muted === true ? false : true;
         }
         initAnalyser() {
                 const context = new AudioContext();
@@ -184,13 +159,14 @@ export class Siren {
                 return analyser;
         }
         updateVisualizer() {
+                //test
                 this.requestID = requestAnimationFrame(_ => this.updateVisualizer());
                 const fbcArray = new Uint8Array(this.analyser.frequencyBinCount);
                 this.analyser.getByteFrequencyData(fbcArray);
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
                 this.ctx.fillStyle = '#0DDEFF';
-                // const barWidth = window.innerWidth * 0.002; 
-                // const gap = window.innerWidth * 0.001;
+                // const barWidth = window.innerWidth / 400;
+                // const gap = window.innerWidth / 400 / 2;
                 const barWidth = 2;
                 const gap = 1;
                 const barStep = barWidth + gap;
@@ -221,7 +197,6 @@ export class Siren {
                                 //id: `${path}`,
                                 name: `${name}`,
                                 path: `${path}`
-
                         })
                 });
         }
@@ -230,14 +205,8 @@ export class Siren {
                 this.playlist.innerHTML = "";
                 return fetch("http://localhost:3000/playlist")
                         .then(response => response.json().then((response) => response.reverse().forEach((element, index) => {
-
-                                const track = document.createElement("div");
-                                this.playlist.appendChild(track);
-                                track.classList.add("track");
-
-                                const deleteBtn = document.createElement("div");
-                                track.appendChild(deleteBtn);
-                                deleteBtn.classList.add("deleteBtn");
+                                const track = this.domElementCreator("div", this.playlist, "track");
+                                const deleteBtn = this.domElementCreator("div", track, "deleteBtn");
                                 deleteBtn.innerHTML = `<i class="fas fa-times"></i>`;
                                 deleteBtn.addEventListener("click", (event) => {
                                         fetch(`http://localhost:3000/playlist/${element.id}`, {
@@ -253,18 +222,12 @@ export class Siren {
                                         deleteBtn.parentNode.parentNode.removeChild(deleteBtn.parentNode);
                                         this.sourceElements.splice(index, 1);
                                 });
-                                const name = document.createElement("div");
-                                track.appendChild(name);
+                                const name = this.domElementCreator("div", track, "name");
                                 name.innerHTML = `Name: ${element.name}`;
-
                                 track.addEventListener("click", _ => {
                                         this.playTrackAtIndex(index);
                                 });
-
-
-
                                 this.addSourceToQueue(`${element.path}`, index);
-
                         })));
         }
         initKeyboardShortcuts() {
@@ -280,6 +243,10 @@ export class Siren {
                         // right arrow
                         if (event.which == 39) {
                                 this.forwardFiveSec(this.audio);
+                        }
+                        // letter m
+                        if (event.which == 77) {
+                                this.muteAudio(this.audio);
                         }
                 });
         }

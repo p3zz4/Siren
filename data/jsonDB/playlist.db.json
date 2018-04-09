@@ -1,24 +1,54 @@
 {
   "playlist": [
     {
-      "name": "Magna - Divide",
-      "path": "../data/music/Magna - Divide.mp3",
+      "name": "ZHU - Chasing Marrakech(copy)",
+      "path": "../data/music/ZHU - Chasing Marrakech(copy).mp3",
       "id": 1
-    },
-    {
-      "name": "ZHU - Chasing Marrakech",
-      "path": "../data/music/ZHU - Chasing Marrakech.mp3",
-      "id": 2
-    },
-    {
-      "name": "ZHU & Nero - Dreams",
-      "path": "../data/music/ZHU & Nero - Dreams.mp3",
-      "id": 5
     },
     {
       "name": "ZHU - Chasing Marrakech(copy 2)",
       "path": "../data/music/ZHU - Chasing Marrakech(copy 2).mp3",
+      "id": 2
+    },
+    {
+      "name": "ZHU - Chasing Marrakech",
+      "path": "../data/music/ZHU - Chasing Marrakech.mp3",
+      "id": 3
+    },
+    {
+      "name": "ZHU & Nero - Dreams(copy)",
+      "path": "../data/music/ZHU & Nero - Dreams(copy).mp3",
+      "id": 4
+    },
+    {
+      "name": "ZHU & Nero - Dreams(copy 2)",
+      "path": "../data/music/ZHU & Nero - Dreams(copy 2).mp3",
+      "id": 5
+    },
+    {
+      "name": "ZHU & Nero - Dreams",
+      "path": "../data/music/ZHU & Nero - Dreams.mp3",
       "id": 6
+    },
+    {
+      "name": "Two Steps From Hell - Molto Piratissimo",
+      "path": "../data/music/Two Steps From Hell - Molto Piratissimo.mp3",
+      "id": 7
+    },
+    {
+      "name": "Magna - Divide(copy)",
+      "path": "../data/music/Magna - Divide(copy).mp3",
+      "id": 8
+    },
+    {
+      "name": "Magna - Divide(copy 2)",
+      "path": "../data/music/Magna - Divide(copy 2).mp3",
+      "id": 9
+    },
+    {
+      "name": "Magna - Divide",
+      "path": "../data/music/Magna - Divide.mp3",
+      "id": 10
     }
   ]
 }
