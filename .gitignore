@@ -61,4 +61,4 @@ typings/
 .next
 
 # music files
-data/music/*
+#data/music/*

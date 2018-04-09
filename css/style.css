@@ -4,7 +4,7 @@ body {
         height: 100%;
         margin: 0px;
         overflow: hidden;
-        font-family: "Roboto";
+        font-family: 'Courier New', Courier, monospace;
         user-select: none;
 }
 .playPauseBtn {
@@ -52,6 +52,8 @@ body {
         position: fixed;
         top: 0%;
         right: -45%;
+        overflow-y: auto;
+        overflow-x: hidden;
         transition: all 0.5s;
         background-color: transparent;
 }
@@ -86,6 +88,9 @@ body {
         margin: 15px;
         padding: 5px;
 }
+.rightPanel .currentTrack{
+        background-clip: red;
+}
 .track div {
         margin: 5px;
 }
@@ -103,7 +108,7 @@ body {
 .canvas {
         background: linear-gradient(#ff0085, #ff0000);
         animation-name: hue;
-        animation-duration: 20s;
+        animation-duration: 40s;
         animation-iteration-count: infinite;
 }
 

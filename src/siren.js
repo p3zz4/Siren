@@ -10,14 +10,10 @@ export class Siren {
                 this.sourceElements = [];
                 this.analyser = this.initAnalyser();
                 this.requestID = null;
-
                 this.updateLocalPlaylist();
-                window.addEventListener("keypress",event =>{
-                        if(event.which == 32){
-                                this.playPauseBtn.click();
-                        }
-                });
+                this.initKeyboardShortcuts();
         }
+
         initPlayPauseBtn() {
                 const playPauseBtn = document.createElement("div");
                 document.body.appendChild(playPauseBtn);
@@ -25,7 +21,7 @@ export class Siren {
 
                 const span = document.createElement("span");
                 playPauseBtn.appendChild(span);
-                span.innerHTML = "▶️";
+                span.innerHTML = `<i class="fas fa-play"></i>`;
                 span.addEventListener("click", () => {
                         if (this.audio.childElementCount === 0) {
                                 this.playFirstTrack();
@@ -41,9 +37,9 @@ export class Siren {
         }
         togglePlayPauseBtn() {
                 if (this.audio.paused) {
-                        this.playPauseBtn.innerHTML = "▶️";
+                        this.playPauseBtn.innerHTML = `<i class="fas fa-play"></i>`;
                 } else {
-                        this.playPauseBtn.innerHTML = "⏸";
+                        this.playPauseBtn.innerHTML = `<i class="fas fa-pause"></i>`;
                 }
         }
         initBottomPanel() {
@@ -58,7 +54,7 @@ export class Siren {
                 const playPreviousTrackBtn = document.createElement("span");
                 controls.appendChild(playPreviousTrackBtn);
                 playPreviousTrackBtn.classList.add("playNextTrackBtn");
-                playPreviousTrackBtn.innerHTML = "⏮";
+                playPreviousTrackBtn.innerHTML = `<i class="fas fa-fast-backward"></i>`;
                 playPreviousTrackBtn.addEventListener("click", () => {
                         this.playPreviousTrack();
                 });
@@ -66,7 +62,7 @@ export class Siren {
                 const playNextTrackBtn = document.createElement("span");
                 controls.appendChild(playNextTrackBtn);
                 playNextTrackBtn.classList.add("playPreviousTrackBtn");
-                playNextTrackBtn.innerHTML = "⏭";
+                playNextTrackBtn.innerHTML = `<i class="fas fa-fast-forward"></i>`;
                 playNextTrackBtn.addEventListener("click", () => {
                         this.playNextTrack();
                 });
@@ -92,12 +88,11 @@ export class Siren {
                 label.innerHTML = "+";
 
                 loader.addEventListener("change", (event) => {
-                        [...loader.files].map((file) => file.name.slice(0, -4)).forEach(name => {
-                                this.addToRemotePlaylist(name,`../data/music/${name}.mp3`);
-                        });
-                        setTimeout(_ => {
+                        [...loader.files].map((file) => file.name.slice(0, -4)).reduce((promises, name) =>
+                                promises.then(_ => this.addToRemotePlaylist(name, `../data/music/${name}.mp3`)), Promise.resolve([])
+                        ).then(_ => {
                                 this.updateLocalPlaylist();
-                        }, 500);
+                        });
                 });
 
                 return rightPanel;
@@ -146,7 +141,6 @@ export class Siren {
                 this.sourceElements[index] = source;
         }
         playTrackAtIndex(index) {
-                console.log(this.sourceElements, index);
                 this.audio.pause();
                 this.audio.innerHTML = "";
                 this.audio.appendChild(this.sourceElements[index]);
@@ -175,6 +169,12 @@ export class Siren {
                 this.playTrackAtIndex((this.sourceElements.indexOf(this.audio.firstChild) + this.sourceElements.length - 1) % this.sourceElements.length);
 
         }
+        forwardFiveSec(audio) {
+                audio.currentTime += 5;
+        }
+        backwardFiveSec(audio) {
+                audio.currentTime -= 5;
+        }
         initAnalyser() {
                 const context = new AudioContext();
                 const analyser = context.createAnalyser();
@@ -189,6 +189,8 @@ export class Siren {
                 this.analyser.getByteFrequencyData(fbcArray);
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
                 this.ctx.fillStyle = '#0DDEFF';
+                // const barWidth = window.innerWidth * 0.002; 
+                // const gap = window.innerWidth * 0.001;
                 const barWidth = 2;
                 const gap = 1;
                 const barStep = barWidth + gap;
@@ -208,30 +210,25 @@ export class Siren {
                 }, 2000);
 
         }
-        addToRemotePlaylist(name,path) {
-                fetch("http://localhost:3000/playlist", {
-                                headers: {
-                                        'Accept': 'application/json',
-                                        'Content-Type': 'application/json'
-                                },
-                                method: "POST",
-                                body: JSON.stringify({
-                                        name: `${name}`,
-                                        path:`${path}`
-                                        
-                                })
+        addToRemotePlaylist(name, path) {
+                return fetch("http://localhost:3000/playlist", {
+                        headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                        },
+                        method: "POST",
+                        body: JSON.stringify({
+                                //id: `${path}`,
+                                name: `${name}`,
+                                path: `${path}`
+
                         })
-                        .then((resolve) => {
-                                console.log(`Saved: ${name}, ${path}`);
-                        })
-                        .catch((err) => {
-                                console.log(`Duplikat: ${name}, ${path}`);
-                        });
+                });
         }
         updateLocalPlaylist() {
                 this.sourceElements = [];
                 this.playlist.innerHTML = "";
-                fetch("http://localhost:3000/playlist")
+                return fetch("http://localhost:3000/playlist")
                         .then(response => response.json().then((response) => response.reverse().forEach((element, index) => {
 
                                 const track = document.createElement("div");
@@ -241,7 +238,7 @@ export class Siren {
                                 const deleteBtn = document.createElement("div");
                                 track.appendChild(deleteBtn);
                                 deleteBtn.classList.add("deleteBtn");
-                                deleteBtn.innerHTML = "X";
+                                deleteBtn.innerHTML = `<i class="fas fa-times"></i>`;
                                 deleteBtn.addEventListener("click", (event) => {
                                         fetch(`http://localhost:3000/playlist/${element.id}`, {
                                                 headers: {
@@ -264,14 +261,26 @@ export class Siren {
                                         this.playTrackAtIndex(index);
                                 });
 
+
+
                                 this.addSourceToQueue(`${element.path}`, index);
 
                         })));
-                console.log("Tracks in the playlist:", this.sourceElements);
         }
-
-        log() {
-                console.log(this.playPauseBtn, this.rightPanel, this.bottomPanel, this.playPauseBtn, this.canvas, this.ctx, this.audio, this.sourceElements);
+        initKeyboardShortcuts() {
+                window.addEventListener("keydown", event => {
+                        // space
+                        if (event.which == 32) {
+                                this.playPauseBtn.click();
+                        }
+                        // left arrow
+                        if (event.which == 37) {
+                                this.backwardFiveSec(this.audio);
+                        }
+                        // right arrow
+                        if (event.which == 39) {
+                                this.forwardFiveSec(this.audio);
+                        }
+                });
         }
-
 }
