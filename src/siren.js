@@ -1,3 +1,4 @@
+import * as RxJS from "rxjs/Rx";
 export class Siren {
         constructor() {
                 this.canvas = this.initCanvas();
@@ -11,7 +12,8 @@ export class Siren {
                 this.analyser = this.initAnalyser();
                 this.requestID = null;
                 this.updateLocalPlaylist();
-                this.initKeyboardShortcuts();
+                //this.initKeyboardShortcuts();
+                this.RxJSShortcuts();
         }
         domElementCreator(elementName, parentElement, className) {
                 const tmpElement = document.createElement(elementName);
@@ -67,7 +69,7 @@ export class Siren {
                 label.innerHTML = `<i class="fas fa-plus"></i>`;
 
                 loader.addEventListener("change", (event) => {
-                        [...loader.files].map((file) => file.name.slice(0, -4)).sort((name1,name2)=>name1<name2).reduce((promises, name) =>
+                        [...loader.files].map((file) => file.name.slice(0, -4)).sort((name1, name2) => name1 < name2).reduce((promises, name) =>
                                 promises.then(_ => this.addToRemotePlaylist(name, `../data/music/${name}.mp3`)), Promise.resolve([])
                         ).then(_ => {
                                 this.updateLocalPlaylist();
@@ -146,6 +148,12 @@ export class Siren {
         }
         backwardFiveSec(audio) {
                 audio.currentTime -= 5;
+        }
+        increaseVolume(audio) {
+                audio.volume = audio.volume + 0.1 >= 1 ? 1 : audio.volume + 0.1;
+        }
+        decreaseVolume(audio) {
+                audio.volume = audio.volume - 0.1 <= 0 ? 0 : audio.volume - 0.1;
         }
         muteAudio(audio) {
                 audio.muted = audio.muted === true ? false : true;
@@ -232,22 +240,26 @@ export class Siren {
         }
         initKeyboardShortcuts() {
                 window.addEventListener("keydown", event => {
-                        // space
-                        if (event.which == 32) {
-                                this.playPauseBtn.click();
-                        }
-                        // left arrow
-                        if (event.which == 37) {
-                                this.backwardFiveSec(this.audio);
-                        }
-                        // right arrow
-                        if (event.which == 39) {
-                                this.forwardFiveSec(this.audio);
-                        }
-                        // letter m
-                        if (event.which == 77) {
-                                this.muteAudio(this.audio);
-                        }
+                        e.which == 32 ? this.playPauseBtn.click() :
+                                e.which == 37 ? this.backwardFiveSec(this.audio) :
+                                e.which == 39 ? this.forwardFiveSec(this.audio) :
+                                e.which == 77 ? this.muteAudio(this.audio) :
+                                e.which == 38 ? this.increaseVolume(this.audio) :
+                                e.which == 40 ? this.decreaseVolume(this.audio) : null;
                 });
+        }
+        RxJSShortcuts() {
+                RxJS.Observable.fromEvent(window, "keydown").subscribe(e => {
+                        e.which == 32 ? this.playPauseBtn.click() :
+                                e.which == 37 ? this.backwardFiveSec(this.audio) :
+                                e.which == 39 ? this.forwardFiveSec(this.audio) :
+                                e.which == 77 ? this.muteAudio(this.audio) :
+                                e.which == 38 ? this.increaseVolume(this.audio) :
+                                e.which == 40 ? this.decreaseVolume(this.audio) : null;
+                }, err => {
+                        console.log("error");
+                }, complete => {
+
+                })
         }
 }
