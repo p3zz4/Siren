@@ -1,54 +1,89 @@
 {
   "playlist": [
     {
-      "name": "ZHU - Chasing Marrakech(copy)",
-      "path": "../data/music/ZHU - Chasing Marrakech(copy).mp3",
-      "id": 1
-    },
-    {
-      "name": "ZHU - Chasing Marrakech(copy 2)",
-      "path": "../data/music/ZHU - Chasing Marrakech(copy 2).mp3",
-      "id": 2
-    },
-    {
-      "name": "ZHU - Chasing Marrakech",
-      "path": "../data/music/ZHU - Chasing Marrakech.mp3",
-      "id": 3
-    },
-    {
-      "name": "ZHU & Nero - Dreams(copy)",
-      "path": "../data/music/ZHU & Nero - Dreams(copy).mp3",
-      "id": 4
-    },
-    {
-      "name": "ZHU & Nero - Dreams(copy 2)",
-      "path": "../data/music/ZHU & Nero - Dreams(copy 2).mp3",
-      "id": 5
-    },
-    {
-      "name": "ZHU & Nero - Dreams",
-      "path": "../data/music/ZHU & Nero - Dreams.mp3",
+      "name": "DragonForce - Lost Souls In Endless TimeLyrics on screenHD",
+      "path": "../data/music/DragonForce - Lost Souls In Endless TimeLyrics on screenHD.mp3",
       "id": 6
-    },
-    {
-      "name": "Two Steps From Hell - Molto Piratissimo",
-      "path": "../data/music/Two Steps From Hell - Molto Piratissimo.mp3",
-      "id": 7
-    },
-    {
-      "name": "Magna - Divide(copy)",
-      "path": "../data/music/Magna - Divide(copy).mp3",
-      "id": 8
     },
     {
       "name": "Magna - Divide(copy 2)",
       "path": "../data/music/Magna - Divide(copy 2).mp3",
-      "id": 9
+      "id": 27
     },
     {
       "name": "Magna - Divide",
       "path": "../data/music/Magna - Divide.mp3",
-      "id": 10
+      "id": 28
+    },
+    {
+      "name": "DragonForce - Lost Souls In Endless TimeLyrics on screenHD",
+      "path": "../data/music/DragonForce - Lost Souls In Endless TimeLyrics on screenHD.mp3",
+      "id": 29
+    },
+    {
+      "name": "ZHU - Chasing Marrakech",
+      "path": "../data/music/ZHU - Chasing Marrakech.mp3",
+      "id": 30
+    },
+    {
+      "name": "ZHU & Nero - Dreams(copy)",
+      "path": "../data/music/ZHU & Nero - Dreams(copy).mp3",
+      "id": 31
+    },
+    {
+      "name": "ZHU - Chasing Marrakech(copy)",
+      "path": "../data/music/ZHU - Chasing Marrakech(copy).mp3",
+      "id": 32
+    },
+    {
+      "name": "ZHU - Chasing Marrakech(copy 2)",
+      "path": "../data/music/ZHU - Chasing Marrakech(copy 2).mp3",
+      "id": 33
+    },
+    {
+      "name": "Two Steps From Hell - Molto Piratissimo",
+      "path": "../data/music/Two Steps From Hell - Molto Piratissimo.mp3",
+      "id": 36
+    },
+    {
+      "name": "Magna - Divide(copy)",
+      "path": "../data/music/Magna - Divide(copy).mp3",
+      "id": 37
+    },
+    {
+      "name": "Magna - Divide(copy 2)",
+      "path": "../data/music/Magna - Divide(copy 2).mp3",
+      "id": 38
+    },
+    {
+      "name": "Magna - Divide",
+      "path": "../data/music/Magna - Divide.mp3",
+      "id": 39
+    },
+    {
+      "name": "DragonForce - Lost Souls In Endless TimeLyrics on screenHD",
+      "path": "../data/music/DragonForce - Lost Souls In Endless TimeLyrics on screenHD.mp3",
+      "id": 40
+    },
+    {
+      "name": "ZHU & Nero - Dreams(copy)",
+      "path": "../data/music/ZHU & Nero - Dreams(copy).mp3",
+      "id": 41
+    },
+    {
+      "name": "ZHU & Nero - Dreams(copy 2)",
+      "path": "../data/music/ZHU & Nero - Dreams(copy 2).mp3",
+      "id": 42
+    },
+    {
+      "name": "ZHU & Nero - Dreams",
+      "path": "../data/music/ZHU & Nero - Dreams.mp3",
+      "id": 43
+    },
+    {
+      "name": "DragonForce - Lost Souls In Endless TimeLyrics on screenHD",
+      "path": "../data/music/DragonForce - Lost Souls In Endless TimeLyrics on screenHD.mp3",
+      "id": 44
     }
   ]
 }
