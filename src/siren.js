@@ -16,12 +16,13 @@ export class Siren {
                 this.bottomPanel = this.initBottomPanel(this.audio);
                 this.leftPanel = this.initLeftPanel(this.canvas.layerParamsArray);
                 this.rightPanel = this.initRightPanel(this.audio, this.dbLocation);
-                this.initKeyboardShortcuts(this.audio, this.playPauseBtn);
-                // this.RxJSShortcuts();
+                // this.initKeyboardShortcuts(this.audio, this.playPauseBtn);
+                this.RxJSShortcuts(this.audio, this.playPauseBtn);
         }
         initAudio() {
                 const audio = domElementCreator("audio", null, "audio");
                 audio.controls = "contols";
+                audio.crossOrigin = "anonymous";
                 audio.preload = "auto";
                 audio.sourceElements = [];
                 audio.addEventListener("ended", _ => {
@@ -247,7 +248,7 @@ export class Siren {
                                 })
                                 const p4 = domElementCreator("p", layer);
                                 p4.innerHTML = "Bar color:";
-                                const inputBarColor = domElementCreator("input", layer, "input", "color");
+                                const inputBarColor = domElementCreator("input", layer, "color", "color");
                                 inputBarColor.value = data.barColor;
                                 inputBarColor.addEventListener("change", _ => {
                                         data.barColor = inputBarColor.value;
@@ -326,7 +327,7 @@ export class Siren {
 
                 function addSourceToQueue(audio, newSource, index) {
                         const source = document.createElement("source");
-                        source.type = "audio/mpeg";
+                        source.type = "audio/mp4";
                         source.src = newSource;
                         audio.sourceElements[index] = source;
                 }
@@ -344,18 +345,18 @@ export class Siren {
                 });
         }
 
-        // RxJSShortcuts() {
-        //         RxJS.Observable.fromEvent(window, "keydown").subscribe(e => {
-        //                 e.which == 32 ? this.playPauseBtn.span.click() :
-        //                         e.which == 37 ? this.backwardFiveSec(this.audio) :
-        //                         e.which == 39 ? this.forwardFiveSec(this.audio) :
-        //                         e.which == 77 ? this.muteAudio(this.audio) :
-        //                         e.which == 38 ? this.increaseVolume(this.audio) :
-        //                         e.which == 40 ? this.decreaseVolume(this.audio) : null;
-        //         }, err => {
-        //                 console.log("error");
-        //         }, complete => {
+        RxJSShortcuts() {
+                RxJS.Observable.fromEvent(window, "keydown").subscribe(e => {
+                        event.which == 32 ? playPauseBtn.span.click() :
+                                event.which == 37 ? audio.backwardFiveSec(audio) :
+                                event.which == 39 ? audio.forwardFiveSec(audio) :
+                                event.which == 77 ? audio.muteAudio(audio) :
+                                event.which == 38 ? audio.increaseVolume(audio) :
+                                event.which == 40 ? audio.decreaseVolume(audio) : null;
+                }, err => {
+                        console.log("error");
+                }, complete => {
 
-        //         })
-        // }
+                })
+        }
 }
