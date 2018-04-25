@@ -4,6 +4,11 @@
       "name": "ZHU - Chasing Marrakech",
       "path": "../data/music/ZHU - Chasing Marrakech.mp3",
       "id": 1
+    },
+    {
+      "name": "Two Steps From Hell - Molto Piratissimo",
+      "path": "../data/music/Two Steps From Hell - Molto Piratissimo.mp3",
+      "id": 2
     }
   ]
 }

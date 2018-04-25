@@ -20,7 +20,7 @@ body {
 }
 
 .playPauseBtn span {
-        padding: 10%;
+        padding: 5%;
 }
 
 /* Bottom */
@@ -36,7 +36,7 @@ body {
         color: rgb(255, 255, 255);
 }
 
-.bottomPanel:hover {
+.bottomPanel.hover {
         z-index: 1;
         display: inline;
         bottom: 0px;
@@ -55,7 +55,7 @@ body {
         margin-right: 2%;
 }
 
-.bottomPanel:hover .controls {
+.bottomPanel.hover .controls {
         margin-top: 3%;
 }
 
@@ -88,9 +88,11 @@ body {
         background-color: transparent;
 }
 
-.leftPanel:hover {
+.leftPanel.hover {
         z-index: 1;
         left: 0%;
+
+        display: inherit;
         background-color: rgba(225, 225, 225, 0.9);
 }
 
@@ -105,7 +107,7 @@ body {
         overflow-x: hidden;
 }
 
-.leftPanel:hover .layerContainer {
+.leftPanel.hover .layerContainer {
         display: inherit;
 }
 
@@ -149,11 +151,12 @@ body {
         cursor: pointer;
 }
 
-.leftPanel .layer .deleteBtn {
+.leftPanel .layer .layerBtn {
         float: right;
+        margin-left: 2vh;
 }
 
-.leftPanel .layer .deleteBtn:hover {
+.leftPanel .layer .layerBtn:hover {
         color: rgb(255, 71, 71);
 }
 
@@ -169,7 +172,7 @@ body {
         background-color: transparent;
 }
 
-.rightPanel:hover {
+.rightPanel.hover {
         z-index: 1;
         right: 0%;
         background-color: rgba(225, 225, 225, 0.9);
@@ -186,7 +189,7 @@ body {
         overflow-x: hidden;
 }
 
-.rightPanel:hover .playlist {
+.rightPanel.hover .playlist {
         display: inherit;
 }
 
@@ -222,7 +225,6 @@ body {
 
 .canvas {
         position: absolute;
-        z-index: -1;
         background: linear-gradient(#ff0085, #ff0000);
         animation-name: hue;
         animation-duration: 480s;
